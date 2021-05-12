@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="TranspondersSnail.jpg" sizes="any" rel="icon" type="image/jpg">
+    <title>Transponders Snail</title>
+    <style>
+      *{
+        padding: 0%;
+        margin: 0%;
+        box-sizing: border-box;
+        font-family:cursive;
+        transition: 0.5s;
+      }
+      body{
+        background: radial-gradient(ellipse at center, #94B4E7, #3F02DC);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+      .mainarea{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-top: 20px;
+        padding: 50px;
+      }
+      .mainarea h1{
+        font-size: 2em;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        letter-spacing: 2px;
+        color: rgb(131, 130, 130);
+        text-shadow: 0px 1.2px rgb(5, 5, 5);
+        font-weight: 900;
+        background-color: white;
+        border-radius: 32px 32px 60px 60px;
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif ;
+        overflow: hidden;
+        box-shadow: 10px 10px 20px rgb(18, 0, 121);
+      }
+      .mainarea h1 img{
+        width: 50px;
+        height: 50px;
+        margin: 0 5px;
+      }
+      .mainarea .loginarea{
+        max-width: 800px;
+        min-width: none;
+      }
+      .mainarea .loginarea .signin{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .mainarea .loginarea .signin label,.messagingarea label{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding-top: 5px;
+        margin-top: 25px;
+        position: relative;
+        cursor: pointer;
+        width: 330px;
+        overflow: hidden;
+      }
+      .messagingarea{
+        position: relative; 
+        height:70vh;
+      }
+      .messagingarea label{
+        margin-top: 0;
+      }
+      .messagingarea .typingarea{
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        background-color: white;
+        flex-wrap: wrap;
+        padding: 5px;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        border-radius: 10px;
+      }
+      .messagingarea .typingarea #mess{
+        width: auto;
+      }
+      .messagingarea .typingarea button:nth-last-child(1){
+        padding: 0px 10px;
+      }
+      .messagingarea .messages{
+        height: 70%;
+        width: 100%;
+        margin-top: 10px;
+        overflow:auto;
+      }
+      .messagingarea .messages::-webkit-scrollbar{
+        display: none;
+      }
+      .mainarea .loginarea .signin label input,.messagingarea label input{
+        border: none;
+        background-color: transparent;
+        transform: translate(0,100%);
+        color: rgb(0, 56, 121);
+        border-bottom: 2px solid rgb(212, 212, 212);
+        font-size: 1em;
+        outline: none;
+      }
+      .mainarea .loginarea .signin label .bord,.messagingarea label .bord{
+        border-bottom: 2px solid rgb(0, 0, 158);
+        transform: translate(-100%,0);
+        transition: 0.5s;
+      }
+      .mainarea .loginarea .signin label .words,.messagingarea label .words{
+        transition: 0.5s;
+        opacity: 1;
+        transform: translate(0,-2px);
+        color: white;
+      }
+      .mainarea .loginarea .signin label input:focus+.words+.bord,.mainarea .loginarea .signin label input:valid+.words+.bord,.messagingarea label input:focus+.words+.bord,.messagingarea label input:valid+.words+.bord{
+        transform: translate(0,0);
+      }
+      .mainarea .loginarea .signin label input:focus+.words,.mainarea .loginarea .signin label input:valid+.words,.messagingarea label input:focus+.words,.messagingarea label input:valid+.words{
+        transform: translate(0,-100%);
+        opacity: 0.5;
+      }
+      .mainarea .loginarea .signin button{
+        margin: 30px 0;
+        padding: 5px 20px;
+        border: none;
+        color: rgb(16, 16, 122);
+        background-color: rgb(100, 100, 255);
+        border-radius: 32px 32px 60px 60px;
+        cursor: pointer;
+      }
+      .mainarea .loginarea .signin button:active{
+        background-color: rgba(100, 100, 255, 0.555);
+      }
+      .mainarea .loginarea .signin p{
+        text-align: left;
+        margin: 20px 0;
+        font-size: 15px;
+        color: rgb(0, 0, 90);
+      }
+      .mainarea .loginarea .signin h3 input{
+        padding: 5px 20px;
+        border: none;
+        color: rgb(25, 122, 16);
+        background-color: rgb(40, 224, 49);
+        border-radius: 32px 32px 60px 60px;
+        cursor: pointer;
+      }
+      .mainarea .loginarea .signin h3 input:active{
+        background-color: rgba(40, 224, 49, 0.521);
+      }
+      .login{
+        transform: translate(0,-50%);
+      }
+      .part{
+        margin: 10px 0;
+        background-color: rgb(43, 255, 0);
+        border-radius: 0 20px 20px 0;
+        padding: 5px;
+        color: white;
+        overflow: auto;
+      }
+      .part h6{
+        color: rgb(22, 119, 3);
+      }
+      @media (max-width:720px) {
+        .mainarea h1{
+          padding: 9px 15px;
+          font-size: 20px;
+        }
+        .mainarea h1 img{
+          width: 35px;
+          height: 35px;
+        }
+        .mainarea .loginarea .signin label,.messagingarea label{
+          width: auto;
+        }
+        .mainarea .loginarea .signin h3{
+          font-size: 15px;
+        }
+        .mainarea .loginarea .signin p{
+          font-size: 13px;
+        }
+      }
+    </style>
+</head>
+<body>
+    <div class="mainarea">
+      <h1 class="snail"><img src="TranspondersSnail.jpg">TRANSPONDERS SNAIL</h1>
+      <div class="loginarea">
+          <form class="signin" onsubmit="submitfire(event)">
+              <label>
+                <input type="text" id="signName" required>
+                <span class="words">Email-id</span>
+                <span class="bord"></span>
+              </label>
+              <label>
+                <input type="password" id="signPass" required>
+                <span class="words">Password</span>
+                <span class="bord"></span>
+              </label>
+              <button type="submit">Sign in</button>
+              <h3><span style="font-style:italic;color:red">Don't have an Account :</span>  Get sign in authority at <input type="button" value="Request" onclick="request()"></h3>
+              <p>Note : Above Request option needs Email id. So make sure to enter a valid email in above Email area [ no need for any other details only email ] .</p>
+            </form>
+      </div>  
+      <div class="messagingarea" style="display: none;">
+        <label>
+          <input type="text" id="signNick" required>
+          <span class="words">Nick Name</span>
+          <span class="bord"></span>
+        </label>
+        <div class="messages">
+        </div>
+        <div class="typingarea">
+          <input type="text" placeholder="Type a message" id="mess">
+          <button type="button" onclick="insert()">🐌</button>
+          <button type="button" onclick="logout()">Log out</button>
+        </div>
+      </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+
+      <!-- Add Firebase products that you want to use -->
+      <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-firestore.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+        <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyDp8K3w2zAatmcZfp1za0M0fP1-_5mVgIg",
+        authDomain: "transponders-snail.firebaseapp.com",
+        databaseURL: "https://transponders-snail-default-rtdb.firebaseio.com",
+        projectId: "transponders-snail",
+        storageBucket: "transponders-snail.appspot.com",
+        messagingSenderId: "726588618357",
+        appId: "1:726588618357:web:b4d31f5b5bb5b98f7c2a3c"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      var database = firebase.database();
+      //declaration
+      var signName,signPass,signNick,userId;
+      function ready(){
+        signName=document.getElementById("signName").value;
+        signPass=document.getElementById("signPass").value;
+      }
+      function clear(){
+        document.getElementById("signName").value="";
+        document.getElementById("signPass").value="";
+      }
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+          var uid = user.uid;
+          userId=uid;
+          document.getElementsByClassName("loginarea")[0].style.display="none";
+          document.getElementsByClassName("snail")[0].classList.add("login");
+          document.getElementsByClassName("messagingarea")[0].style.display="initial";
+          // ...
+        } else {
+          // User is signed out
+          // ...
+          document.getElementsByClassName("loginarea")[0].style.display="initial";
+          document.getElementsByClassName("snail")[0].classList.remove("login");
+          document.getElementsByClassName("messagingarea")[0].style.display="none";
+        }
+      });
+      function submitfire(e){
+        e.preventDefault();
+        ready();
+        firebase.auth().signInWithEmailAndPassword(signName, signPass)
+        .then((userCredential) => {
+          // Signed in 
+          var user = userCredential.user;
+          alert("Logged In");
+          clear();
+          // ...
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          alert(errorCode+"  "+errorMessage);
+          // ..
+        });
+      }
+      function logout(){
+        firebase.auth().signOut().then(() => {
+        // Sign-out successful.
+          alert("LOGGED OUT");
+        }).catch((error) => {
+          // An error happened.
+          alert(error);
+        });
+      }
+      function request(e){
+        ready();
+        if(signName.length>10){
+          firebase.database().ref('Requests/' + firebase.database().ref("Requests").push().getKey()).set({
+            e_mail:signName,
+          })
+          alert("Inserted");
+          clear();
+        }
+        else{
+          alert("Enter valid email");
+        }
+      }
+      function insert(){
+        var mess=document.getElementById("mess").value;
+        signNick=document.getElementById("signNick").value;
+        if(signNick.length>0){
+        if(mess.length>0){
+          var v=firebase.database().ref("Chats").push().getKey();
+          firebase.database().ref('Chats/' + v).set({
+          userId:userId,
+          date:new Date().getDate(),
+          month:new Date().getMonth(),
+          year:new Date().getFullYear(),
+          hours:new Date().getHours(),
+          mins:new Date().getMinutes(),
+          message:mess,
+          nick:signNick,
+        });
+        document.getElementById("mess").value="";
+        }
+      }
+      else{
+        alert("Enter a Nick Name to Continue");
+      }
+      }
+        firebase.database().ref().child("Chats").on('child_added',(snapshot)=>{
+        if(snapshot.exists()){
+          var htm="";
+          htm+="<div class='part'><h6>";
+          htm+=snapshot.val().nick;
+          htm+="</h6><p>";
+          htm+=snapshot.val().message+"</p>";
+          htm+="<h6>"+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
+          if(snapshot.val().userId!=userId){
+            document.getElementsByClassName("part")[0].style.background="#fc4235";
+            document.getElementsByClassName("part")[0].style.borderRadius="20px 0 0 20px";
+            document.querySelector(".part h6").style.background="#992820";
+          }
+          htm+="</div>";
+          document.getElementsByClassName("messages")[0].innerHTML+=htm;
+        }
+      })
+    </script> 
+</body>
+</html>
