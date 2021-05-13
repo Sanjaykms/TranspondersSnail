@@ -135,6 +135,7 @@
         opacity: 0.8;
         transform: rotate(90deg);
         font-size: 25px;
+        transition: none;
       }
       .messagingarea .messages .messslide a{
         text-decoration: none;
@@ -319,6 +320,16 @@
           document.getElementsByClassName("snail")[0].classList.add("login");
           document.getElementsByClassName("messagingarea")[0].style.display="initial";
           // ...
+          setInterval(() => {
+      if((document.getElementsByClassName("messages")[0].scrollHeight)-(document.getElementsByClassName("messages")[0].scrollTop+document.getElementsByClassName("messages")[0].clientHeight)<80){
+        document.querySelector(".messslide").style.visibility="hidden";
+        document.querySelector(".messslide").style.pointerEvents="none";
+      }
+      else{
+        document.querySelector(".messslide").style.visibility="visible";
+        document.querySelector(".messslide").style.pointerEvents="auto";
+      }
+    }, 100);
         } else {
           // User is signed out
           // ...
@@ -389,43 +400,42 @@
         alert("Enter a Nick Name to Continue");
       }
       }
-        firebase.database().ref().child("Chats").on('child_added',(snapshot)=>{
-        if(snapshot.exists()){
-          var htm="";
-          if(snapshot.val().userId!=userId){
-            htm+="<div class='part' style='background:#ff675c;text-align:right;border-radius:20px 0 0 20px;'>";
-          }else{
-            htm+="<div class='part'>";
-          }
-          if(snapshot.val().userId!=userId){
-            htm+="<h6 style='color:#992820;'>"+snapshot.val().nick;
-          }
-          else{
-            htm+="<h6>"+snapshot.val().nick;
-          }
-          htm+="</h6><p id='para"+snapshot.key+"'>";
-          htm+=snapshot.val().message+"</p>";
-          if(snapshot.val().userId!=userId){
-            htm+="<h6 style='color:#992820;text-align:left;'>"+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
-          }
-          else{
-            htm+="<h6><button style='background-color:#444;padding:2px 8px;color:white;font-weight:900;border:none;border-radius:20px;cursor:pointer;' onclick='deleted(this)' data-id='"+snapshot.key+"'>Delete</button> "+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
-          }
-          htm+="</div>";
-          document.getElementsByClassName("messings")[0].innerHTML+=htm;
-          document.querySelector(".messslide a").click();
-        }
-      })
-      // delete
-      function deleted(self){
+       // delete
+       function deleted(self){
         var messId=self.getAttribute("data-id");
         firebase.database().ref("Chats/"+messId).remove();
       }
-      // listener remove
-      firebase.database().ref().child("Chats").on('child_removed',(snapshot)=>{
-        document.getElementById("para"+snapshot.key).innerHTML="This message has been removed";
-      });
-      //tracker
+      firebase.database().ref().child("Chats").on('child_added',(snapshot)=>{
+       if(snapshot.exists()){
+         var htm="";
+         if(snapshot.val().userId!=userId){
+           htm+="<div class='part' style='background:#ff675c;text-align:right;border-radius:20px 0 0 20px;'>";
+         }else{
+           htm+="<div class='part'>";
+         }
+         if(snapshot.val().userId!=userId){
+           htm+="<h6 style='color:#992820;'>"+snapshot.val().nick;
+         }
+         else{
+           htm+="<h6>"+snapshot.val().nick;
+         }
+         htm+="</h6><p id='para"+snapshot.key+"'>";
+         htm+=snapshot.val().message+"</p>";
+         if(snapshot.val().userId!=userId){
+           htm+="<h6 style='color:#992820;text-align:left;'>"+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
+         }
+         else{
+           htm+="<h6><button style='background-color:#444;padding:2px 8px;color:white;font-weight:900;border:none;border-radius:20px;cursor:pointer;' onclick='deleted(this)' data-id='"+snapshot.key+"'>Delete</button> "+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
+         }
+         htm+="</div>";
+         document.getElementsByClassName("messings")[0].innerHTML+=htm;
+         document.querySelector(".messslide a").click();
+       }
+     })
+     // listener remove
+     firebase.database().ref().child("Chats").on('child_removed',(snapshot)=>{
+       document.getElementById("para"+snapshot.key).innerHTML="⚠ This message has been removed !";
+     });
     </script> 
 </body>
 </html>
