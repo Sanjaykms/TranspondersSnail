@@ -424,7 +424,6 @@
       // listener remove
       firebase.database().ref().child("Chats").on('child_removed',(snapshot)=>{
         document.getElementById("para"+snapshot.key).innerHTML="This message has been removed";
-        document.querySelector(".messslide a").click();
       });
       //tracker
     </script> 
