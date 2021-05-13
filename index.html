@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="TranspondersSnail.jpg" sizes="any" rel="icon" type="image/jpg">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=K2D:wght@100&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap" rel="stylesheet">
     <title>Transponders Snail</title>
     <style>
       *{
         padding: 0%;
         margin: 0%;
         box-sizing: border-box;
-        font-family: 'K2D', sans-serif;
+        font-family: 'Yusei Magic', sans-serif;
         outline: none;
         transition: 0.5s;
         scroll-behavior: smooth;
@@ -22,7 +22,7 @@
         background: radial-gradient(ellipse at center, #94B4E7, #3F02DC);
         background-repeat: no-repeat;
         background-attachment: fixed;
-        height: 100vh;  
+        height: 100vh;
       }
       .mainarea{
         display: flex;
@@ -333,7 +333,6 @@
         .then((userCredential) => {
           // Signed in 
           var user = userCredential.user;
-          alert("Logged In");
           clear();
           // ...
         })
@@ -347,7 +346,6 @@
       function logout(){
         firebase.auth().signOut().then(() => {
         // Sign-out successful.
-          alert("LOGGED OUT");
         }).catch((error) => {
           // An error happened.
           alert(error);
