@@ -5,14 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="TranspondersSnail.jpg" sizes="any" rel="icon" type="image/jpg">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=K2D:wght@100&display=swap" rel="stylesheet">
     <title>Transponders Snail</title>
     <style>
       *{
         padding: 0%;
         margin: 0%;
         box-sizing: border-box;
-        font-family:cursive;
+        font-family: 'K2D', sans-serif;
+        outline: none;
         transition: 0.5s;
+        scroll-behavior: smooth;
       }
       body{
         background: radial-gradient(ellipse at center, #94B4E7, #3F02DC);
@@ -25,7 +29,7 @@
         justify-content: center;
         flex-direction: column;
         margin-top: 20px;
-        padding: 50px;
+        padding: 30px;
       }
       .mainarea h1{
         font-size: 2em;
@@ -38,7 +42,6 @@
         font-weight: 900;
         background-color: white;
         border-radius: 32px 32px 60px 60px;
-        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif ;
         overflow: hidden;
         box-shadow: 10px 10px 20px rgb(18, 0, 121);
       }
@@ -70,38 +73,68 @@
       }
       .messagingarea{
         position: relative; 
-        height:70vh;
+        height:80vh;
+        width: 600px;
       }
       .messagingarea label{
         margin-top: 0;
       }
       .messagingarea .typingarea{
         position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: space-evenly;
+        display: grid;
+        grid-template-columns: auto 50px 70px;
         background-color: white;
-        flex-wrap: wrap;
         padding: 5px;
         bottom: 0;
         left: 0;
         width: 100%;
         border-radius: 10px;
       }
-      .messagingarea .typingarea #mess{
-        width: auto;
+      .messagingarea .typingarea button{
+        background-color: rgb(177, 177, 177);
+        border: none;
       }
       .messagingarea .typingarea button:nth-last-child(1){
-        padding: 0px 10px;
+        padding: 8px;
+        color: white;
+        font-weight: 900;
+        border-radius: 0 6px 6px 0;
+      }
+      .messagingarea .typingarea button:nth-last-child(2){
+        margin: 0 5px;
+      }
+      .messagingarea .typingarea #mess{
+        padding-left: 5px;
+        border-radius: 6px 0 0 6px;
+        border: 1.5px solid black;
       }
       .messagingarea .messages{
-        height: 70%;
+        height: 80%;
         width: 100%;
         margin-top: 10px;
         overflow:auto;
       }
+      .messagingarea label{
+        width: 100%;
+      }
       .messagingarea .messages::-webkit-scrollbar{
         display: none;
+      }
+      .messagingarea .messages .messslide{
+        position: absolute;
+        right: 15px;
+        bottom: 60px;
+        padding: 3px;
+        background-color: white;
+        border-radius: 50%;
+        cursor: pointer;
+        user-select: none;
+        opacity: 0.8;
+        transform: rotate(90deg);
+        font-size: 25px;
+      }
+      .messagingarea .messages .messslide a{
+        text-decoration: none;
       }
       .mainarea .loginarea .signin label input,.messagingarea label input{
         border: none;
@@ -160,20 +193,26 @@
         background-color: rgba(40, 224, 49, 0.521);
       }
       .login{
-        transform: translate(0,-50%);
+        transform: translate(0,-20%);
       }
       .part{
         margin: 10px 0;
         background-color: rgb(43, 255, 0);
         border-radius: 0 20px 20px 0;
-        padding: 5px;
+        padding: 10px;
         color: white;
         overflow: auto;
       }
       .part h6{
         color: rgb(22, 119, 3);
       }
+      .part h6:nth-last-child(1){
+        text-align: right;
+      }
       @media (max-width:720px) {
+        .mainarea{
+          padding: 15px 10px 10px 10px;
+        }
         .mainarea h1{
           padding: 9px 15px;
           font-size: 20px;
@@ -190,6 +229,9 @@
         }
         .mainarea .loginarea .signin p{
           font-size: 13px;
+        }
+        .messagingarea{
+          width: 100%;
         }
       }
     </style>
@@ -217,16 +259,20 @@
       <div class="messagingarea" style="display: none;">
         <label>
           <input type="text" id="signNick" required>
-          <span class="words">Nick Name</span>
+          <span class="words">Transponder Name</span>
           <span class="bord"></span>
         </label>
         <div class="messages">
+          <div class="messings">
+          </div>
+          <span id="track"></span>
+          <div class="messslide"><a href="#track">➠</a></div>
         </div>
-        <div class="typingarea">
-          <input type="text" placeholder="Type a message" id="mess">
-          <button type="button" onclick="insert()">🐌</button>
+        <form class="typingarea" onsubmit="return false;">
+            <input type="text" placeholder="Type a message" id="mess">
+            <button type="submit" onclick="insert()">🐌</button>
           <button type="button" onclick="logout()">Log out</button>
-        </div>
+        </form>
       </div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
@@ -276,6 +322,7 @@
           document.getElementsByClassName("loginarea")[0].style.display="initial";
           document.getElementsByClassName("snail")[0].classList.remove("login");
           document.getElementsByClassName("messagingarea")[0].style.display="none";
+          document.getElementsByClassName("messages")[0].innerHTML="";
         }
       });
       function submitfire(e){
@@ -344,20 +391,40 @@
         firebase.database().ref().child("Chats").on('child_added',(snapshot)=>{
         if(snapshot.exists()){
           var htm="";
-          htm+="<div class='part'><h6>";
-          htm+=snapshot.val().nick;
-          htm+="</h6><p>";
-          htm+=snapshot.val().message+"</p>";
-          htm+="<h6>"+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
           if(snapshot.val().userId!=userId){
-            document.getElementsByClassName("part")[0].style.background="#fc4235";
-            document.getElementsByClassName("part")[0].style.borderRadius="20px 0 0 20px";
-            document.querySelector(".part h6").style.background="#992820";
+            htm+="<div class='part' style='background:#ff675c;text-align:right;border-radius:20px 0 0 20px;'>";
+          }else{
+            htm+="<div class='part'>";
+          }
+          if(snapshot.val().userId!=userId){
+            htm+="<h6 style='color:#992820;'>"+snapshot.val().nick;
+          }
+          else{
+            htm+="<h6>"+snapshot.val().nick;
+          }
+          htm+="</h6><p id='para"+snapshot.key+"'>";
+          htm+=snapshot.val().message+"</p>";
+          if(snapshot.val().userId!=userId){
+            htm+="<h6 style='color:#992820;text-align:left;'>"+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
+          }
+          else{
+            htm+="<h6><button style='background-color:#444;padding:2px 8px;color:white;font-weight:900;border:none;border-radius:20px;cursor:pointer;' onclick='deleted(this)' data-id='"+snapshot.key+"'>Delete</button> "+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
           }
           htm+="</div>";
-          document.getElementsByClassName("messages")[0].innerHTML+=htm;
+          document.getElementsByClassName("messings")[0].innerHTML+=htm;
+          document.querySelector(".messslide a").click();
         }
       })
+      // delete
+      function deleted(self){
+        var messId=self.getAttribute("data-id");
+        firebase.database().ref("Chats/"+messId).remove();
+      }
+      // listener remove
+      firebase.database().ref().child("Chats").on('child_removed',(snapshot)=>{
+        document.getElementById("para"+snapshot.key).innerHTML="This message has been removed";
+      });
+      //tracker
     </script> 
 </body>
 </html>
