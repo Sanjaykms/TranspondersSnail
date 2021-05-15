@@ -238,10 +238,161 @@
           width: 100%;
         }
       }
+      /*loading area*/
+      .load{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100vh;
+            background-color: black;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .load .content{
+            position: relative;
+            width:550px;
+            height: 300px;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .load .content .line{
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background-color: rgb(43, 253, 43);
+            transform: scaleX(0);
+            animation: animate 5s infinite cubic-bezier(0.85, 0.02, 0.17, 1.01) 1s;
+        }
+        @keyframes animate{
+            0%{
+                transform: scaleX(0);
+            }
+            20%{
+                transform: scaleX(0);
+            }
+            50%{
+                transform: scaleX(1);
+            }
+            70%{
+                transform: scaleX(1);
+            }
+            100%{
+                transform: scaleX(0);
+            }
+        }
+        .load .content .pen{
+            position: absolute;
+            width: 50%;
+            height: 23px;
+            top: 19px;
+            left: 37%;
+            transform: rotate(120deg);
+            background-image: linear-gradient(to right,transparent 15%,rgb(43, 253, 43) 15%,rgb(43, 253, 43) 85%);
+            border-radius: 5px;
+            animation: anime 5s infinite cubic-bezier(0.85, 0.02, 0.17, 1.01) 1s;
+        }
+        @keyframes anime{
+           0%{
+               top: 19px;
+               left: 37%;
+               transform: rotate(120deg);
+           }
+           10%{
+               top:0px;
+           }
+           20%{
+               left: 37%;
+               transform: rotate(-60deg);
+           }
+           23%{
+               top:19px;
+           }
+           50%{
+               top:19px;
+               left: 87%;
+               transform: rotate(-60deg);
+           }
+           60%{
+               top:35px;
+               left: 95%;
+           }
+           70%{
+               top:20px;
+               left: 87%;
+               transform: rotate(120deg);
+           }
+           100%{
+               left: 37%;
+               transform: rotate(120deg);
+           }
+        }
+        .load .content .pen::after{
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            border-radius: 0 5px 5px 0;
+            background-color: rgb(41, 41, 41);
+            z-index: -1;
+        }
+        .load .content .pen::before{
+            content: "";
+            position: absolute;
+            left:-20px;
+            top: 0;
+            border:solid;
+            border-width: 11.5px 50px 11.5px 11.5px;
+            border-color: transparent rgb(41, 41, 41) transparent transparent;
+            z-index: -1;
+        }
+        .load .content .pen .front{
+            position: absolute;
+            left:-34px;
+            top: 0;
+            border:solid;
+            width: 2px;
+            height: 2px;
+            border-radius: 50px;
+            border-width: 11.5px 50px 11.5px 11.5px;
+            border-color: transparent rgb(43, 253, 43) transparent transparent; 
+            transform: scale(0.3);
+            z-index: 1;
+        } 
+        @media (max-width:550px) {
+            .load .content{
+                width: 50%;
+                height: 25%;
+            }
+            .load .content .pen{
+                background-image: linear-gradient(to right,transparent 40%,rgb(43, 253, 43) 40%,rgb(43, 253, 43) 40%);
+            }
+            .load div:nth-last-child(1){
+                font-size: 15px !important;
+            }
+        }
+        @media (max-width:320px) {
+            .load .content .pen{
+                background-image: linear-gradient(to right,transparent 50%,rgb(43, 253, 43) 50%,rgb(43, 253, 43) 50%);
+            }
+        }
     </style>
 </head>
-<body>
-    <div class="mainarea">
+<body onload="loaded()">
+  <div class="load">
+    <div class="content">
+        <div class="line"></div>
+        <div class="pen">
+            <span class="front"></span>
+        </div>
+    </div>
+    <div style="font-size:1.5rem;text-transform: uppercase;letter-spacing: 10px;">Loading...</div>
+</div>
+    <div class="mainarea" style="display: none;">
       <h1 class="snail"><img src="TranspondersSnail.jpg">TRANSPONDERS SNAIL</h1>
       <div class="loginarea">
           <form class="signin" onsubmit="submitfire(event)">
@@ -267,6 +418,9 @@
           <span class="bord"></span>
         </label>
         <div class="messages">
+          <div class="part">
+            <p>Enter some message here.</p>
+          </div>
           <div class="messings">
           </div>
           <span id="track"></span>
@@ -310,6 +464,9 @@
         document.getElementById("signName").value="";
         document.getElementById("signPass").value="";
       }
+      function refresh(){
+        location.reload();
+      }
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           // User is signed in, see docs for a list of available properties
@@ -319,8 +476,8 @@
           document.getElementsByClassName("loginarea")[0].style.display="none";
           document.getElementsByClassName("snail")[0].classList.add("login");
           document.getElementsByClassName("messagingarea")[0].style.display="initial";
-          // ...
-          setInterval(() => {
+          // ... check for auto scroll
+         var inter=setInterval(() => {
       if((document.getElementsByClassName("messages")[0].scrollHeight)-(document.getElementsByClassName("messages")[0].scrollTop+document.getElementsByClassName("messages")[0].clientHeight)<80){
         document.querySelector(".messslide").style.visibility="hidden";
         document.querySelector(".messslide").style.pointerEvents="none";
@@ -330,13 +487,43 @@
         document.querySelector(".messslide").style.pointerEvents="auto";
       }
     }, 100);
+    // inserting messages goes here
+    document.getElementsByClassName("messings")[0].innerHTML="";
+    firebase.database().ref().child("Chats").on('child_added',(snapshot)=>{
+       if(snapshot.exists()){
+         var htm="";
+         if(snapshot.val().userId!=userId){
+           htm+="<div class='part' style='background:#ff675c;text-align:right;border-radius:20px 0 0 20px;'>";
+         }else{
+           htm+="<div class='part'>";
+         }
+         if(snapshot.val().userId!=userId){
+           htm+="<h6 style='color:#992820;'>"+snapshot.val().nick;
+         }
+         else{
+           htm+="<h6>"+snapshot.val().nick;
+         }
+         htm+="</h6><p id='para"+snapshot.key+"'>";
+         htm+=snapshot.val().message+"</p>";
+         if(snapshot.val().userId!=userId){
+           htm+="<h6 style='color:#992820;text-align:left;'>"+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
+         }
+         else{
+           htm+="<h6><button style='background-color:#444;padding:2px 8px;color:white;font-weight:900;border:none;border-radius:20px;cursor:pointer;' onclick='deleted(this)' data-id='"+snapshot.key+"'>Delete</button> "+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
+         }
+         htm+="</div>";
+         document.getElementsByClassName("messings")[0].innerHTML+=htm;
+         document.querySelector(".messslide a").click();
+       }
+       console.log("hu");
+     })
         } else {
           // User is signed out
           // ...
           document.getElementsByClassName("loginarea")[0].style.display="initial";
           document.getElementsByClassName("snail")[0].classList.remove("login");
           document.getElementsByClassName("messagingarea")[0].style.display="none";
-          document.getElementsByClassName("messages")[0].innerHTML="";
+          clearInterval(inter);
         }
       });
       function submitfire(e){
@@ -357,12 +544,14 @@
         });
       }
       function logout(){
+        if(confirm("Do you want to Log Out?")){
         firebase.auth().signOut().then(() => {
         // Sign-out successful.
         }).catch((error) => {
           // An error happened.
           alert(error);
         });
+      }
       }
       function request(e){
         ready();
@@ -397,45 +586,24 @@
         }
       }
       else{
-        alert("Enter a Nick Name to Continue");
+        alert("Enter a Transponder Name to Continue");
       }
+      return false;
       }
        // delete
        function deleted(self){
         var messId=self.getAttribute("data-id");
         firebase.database().ref("Chats/"+messId).remove();
       }
-      firebase.database().ref().child("Chats").on('child_added',(snapshot)=>{
-       if(snapshot.exists()){
-         var htm="";
-         if(snapshot.val().userId!=userId){
-           htm+="<div class='part' style='background:#ff675c;text-align:right;border-radius:20px 0 0 20px;'>";
-         }else{
-           htm+="<div class='part'>";
-         }
-         if(snapshot.val().userId!=userId){
-           htm+="<h6 style='color:#992820;'>"+snapshot.val().nick;
-         }
-         else{
-           htm+="<h6>"+snapshot.val().nick;
-         }
-         htm+="</h6><p id='para"+snapshot.key+"'>";
-         htm+=snapshot.val().message+"</p>";
-         if(snapshot.val().userId!=userId){
-           htm+="<h6 style='color:#992820;text-align:left;'>"+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
-         }
-         else{
-           htm+="<h6><button style='background-color:#444;padding:2px 8px;color:white;font-weight:900;border:none;border-radius:20px;cursor:pointer;' onclick='deleted(this)' data-id='"+snapshot.key+"'>Delete</button> "+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
-         }
-         htm+="</div>";
-         document.getElementsByClassName("messings")[0].innerHTML+=htm;
-         document.querySelector(".messslide a").click();
-       }
-     })
      // listener remove
      firebase.database().ref().child("Chats").on('child_removed',(snapshot)=>{
        document.getElementById("para"+snapshot.key).innerHTML="⚠ This message has been removed !";
      });
+     //loading function
+     function loaded(){
+       document.getElementsByClassName("load")[0].style.display="none";
+       document.getElementsByClassName("mainarea")[0].style.display="flex";
+     }
     </script> 
 </body>
 </html>
