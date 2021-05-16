@@ -413,7 +413,7 @@
             </form>
       </div>  
       <div class="messagingarea" style="display: none;">
-        <label>
+        <label style="pointer-events: none;">
           <input type="text" id="signNick" required>
           <span class="words">Transponder Name</span>
           <span class="bord"></span>
@@ -516,8 +516,18 @@
          document.getElementsByClassName("messings")[0].innerHTML+=htm;
          document.querySelector(".messslide a").click();
        }
-       console.log("hu");
-     })
+     });
+     //
+     firebase.database().ref().child("profile").child(userId).get().then((snapshot)=>{
+       if(snapshot.exists()){
+         document.getElementById("signNick").value=snapshot.val();
+       }
+     });
+     firebase.database().ref().child("profile").get().then((snapshot)=>{
+       if(snapshot.exists()){
+         console.log(snapshot.val());
+       }
+     });
         } else {
           // User is signed out
           // ...
