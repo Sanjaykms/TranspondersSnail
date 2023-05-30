@@ -479,6 +479,7 @@
        if(snapshot.exists()){
          console.log(snapshot.val()+" "+userId);
        }
+			console.log(userId);
      });
      firebase.database().ref().child("profile").child(userId).get().then((snapshot)=>{
        if(snapshot.exists()){
