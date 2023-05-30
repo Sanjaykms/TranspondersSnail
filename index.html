@@ -475,13 +475,15 @@
           var uid = user.uid;
           userId=uid;
 			
-			firebase.database().ref().child("Chats").once('value', (snapshot) => {
+	setTimeout(()=>{
+		firebase.database().ref().child("Chats").once('value', (snapshot) => {
   if (snapshot.exists()) {
     const chats = snapshot.val();
     // Do something with the chats data
     console.log(chats);
   }
 });
+	},1000)		
 
      //
      firebase.database().ref().child("profile").child(userId).get().then((snapshot)=>{
