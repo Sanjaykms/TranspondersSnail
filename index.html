@@ -474,6 +474,42 @@
           // https://firebase.google.com/docs/reference/js/firebase.User
           var uid = user.uid;
           userId=uid;
+			
+			firebase.database().ref().child("Chats").once('value', (snapshot) =>{
+       if(snapshot.exists()){
+         var htm="";
+         if(snapshot.val().userId!=userId){
+           htm+="<div class='part' style='background:#ff675c;text-align:right;border-radius:20px 0 0 20px;'>";
+         }else{
+           htm+="<div class='part'>";
+         }
+         if(snapshot.val().userId!=userId){
+           htm+="<h6 style='color:#992820;'>"+snapshot.val().nick;
+         }
+         else{
+           htm+="<h6>"+snapshot.val().nick;
+         }
+         htm+="</h6><p id='para"+snapshot.key+"'>";
+         htm+=snapshot.val().message+"</p>";
+         if(snapshot.val().userId!=userId){
+           htm+="<h6 style='color:#992820;text-align:left;'>"+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
+         }
+         else{
+           htm+="<h6><button style='background-color:#444;padding:2px 8px;color:white;font-weight:900;border:none;border-radius:20px;cursor:pointer;' onclick='deleted(this)' data-id='"+snapshot.key+"'>Delete</button> "+snapshot.val().hours+":"+snapshot.val().mins+" "+snapshot.val().date+"/"+(snapshot.val().month+1)+"/"+snapshot.val().year+"</h6>";
+         }
+         htm+="</div>";
+         document.getElementsByClassName("messings")[0].innerHTML+=htm;
+         document.querySelector(".messslide a").click();
+       }
+     });
+     //
+     firebase.database().ref().child("profile").child(userId).get().then((snapshot)=>{
+       if(snapshot.exists()){
+         document.getElementById("signNick").value=snapshot.val();
+       }
+     });
+			
+			
           document.getElementsByClassName("loginarea")[0].style.display="none";
           document.getElementsByClassName("snail")[0].classList.add("login");
           document.getElementsByClassName("messagingarea")[0].style.display="initial";
@@ -490,6 +526,7 @@
     }, 100);
     // inserting messages goes here
     document.getElementsByClassName("messings")[0].innerHTML="";
+    
     firebase.database().ref().child("Chats").on('child_added',(snapshot)=>{
        if(snapshot.exists()){
          var htm="";
