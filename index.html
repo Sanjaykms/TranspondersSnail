@@ -475,6 +475,11 @@
           var uid = user.uid;
           userId=uid;	
      //
+		firebase.database().ref().child("Chats").on('value', (snapshot) => {
+       if(snapshot.exists()){
+         console.log(snapshot.val()+" "+userId);
+       }
+     });
      firebase.database().ref().child("profile").child(userId).get().then((snapshot)=>{
        if(snapshot.exists()){
          document.getElementById("signNick").value=snapshot.val();
